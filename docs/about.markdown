@@ -4,15 +4,8 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+I am an unprofessional programmer who is interested in 3D computer graphics. I have some experiences in Unity, C# and shader programming, but not "experienced". I'd like to share my progress when I successfully implemented something or learned a new tech. If you found something helpful in my blog, that's my pleasure.
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+This is a simple website built using Github Pages and Jekyll as my personal website and blog, you can find my email below as a form of contact.
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
-
-
-[jekyll-organization]: https://github.com/jekyll
+ 
