@@ -21,10 +21,10 @@
 title: maorachow's personal website
 email: maorachow@163.com
 description: >- # this means to ignore newlines until "baseurl:"
-   
+   "maorachow's personal website"
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
-#twitter_username: jekyllrb
+twitter_username: jekyllrb
 github_username:  maorachow
 
 # Build settings
