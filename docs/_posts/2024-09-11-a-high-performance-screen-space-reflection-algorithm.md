@@ -14,11 +14,11 @@ Unity team won't accept my asset until I show them what aspect of programming I 
 
 Screen space reflections, also known as SSR, is a screen-space effect used to simulate reflections in 3D space on any surface. Although it can only reflect surfaces in screen space, it still greatly increases the rendering quality of a game because it has high precision and can fit in complex scenes more accurately than IBL or planear reflections.    
 
-![Sponza without SSR](../images/20240911/Sponza_without_SSR.png)
+![@](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Sponza_without_SSR.png?raw=true)
 
 Sponza scene without SSR
 
-![Sponza with SSR](../images/20240911/Sponza%20with%20SSR.png)
+![Sponza with SSR](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Sponza%20with%20SSR.png?raw=true)
 
 ### Performance issues
 
@@ -75,11 +75,11 @@ High quality often means high performance impact, that's true in our topic: Scre
 
 This is a basic "world space raymarching" version of SSR. Takes very short time to code, right? Let's see the performance and quality of this method.
 
-![Bad FPS](../images/20240911/Bad%20FPS.png "Bad FPS")
+![Bad FPS](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Bad%20FPS.png?raw=true "Bad FPS")
 
 Rendered in 4K resolution, 1024 iterations, marching stride length: 0.05 meters, 17.5FPS, no reflection at further distance.
 
-![@](../images/20240911/Bad%20FPS2.png)
+![@](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Bad%20FPS2.png?raw=true)
 
 Rendered in 4K resolution, 1024 iterations, marching stride length: 0.25 meters, 22FPS, stripped artifacts at further distance.
 
@@ -89,13 +89,13 @@ The result is not very acceptable, due to 2 critical issues:
 
 As the image one shows, there are less reflections at further distance. That's because our current method marches the ray in the world space, because we need to project this "world space position" into the screen space to compare with the depth value stored in camera depth texture, the delta of screen space testing UV in each iteration will not be as much as the world space position. A bad case is like that:  we have done 1000 steps of raymarching in a pixel, but it only moves the testing point a few pixels further, causing a waste of time.
 
-![@](../images/20240911/Over-sampling.jpg)
+![@](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Over-sampling.jpg?raw=true)
 
 #### 2.Useless testing in the air
 
 Our current method just moves the testing point by a constant distance, if the surface is very far away from the camera, the testing point may not reach the surface after finishing all the steps, so you cannot have distant reflections with low testing step count and you cannot have high performance with high testing step count. Instead of having a fixed distance every step, can we use a dynamic step length and skip empty spaces to make the algorithm more effective?
 
-![@](../images/20240911/Constant%20Ray%20Step%20Length.png)
+![@](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Constant%20Ray%20Step%20Length.png?raw=true)
 
 ### An universal solution
 
@@ -105,13 +105,13 @@ Is there a "super algorithm" that can solve both two major issues? The answer is
 
 We know that the perspective projection matrix transforms primitives from view space to homogeneous space. The perspective projection shrinks all the objects in the view frustum into a "Homogeneous clip Space" which maybe different depending on your graphics API, we use a perspective divide to convert HCS into Normalized Device Coordinates which is similar to a cube. In this "cube" all the coordinate values are between (X=-1,Y=-1,Z=-1) and (X=1,Y=1,Z=1).(On directX platforms, between (X=-1,Y=-1,Z=0) and (X=1,Y=1,Z=1))  then we remap this "NDC Cube" to fit in a 2D texture and use the Z value stored in it for depth testing, this texture is the final image presented on the screen. Here I use images on www.opengl-tutorial.org to visualize this progress.
 
-![@](../images/20240911/Before%20Perspective.png) 
+![@](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Before%20Perspective.png?raw=true) 
 
-![After Perspective](../images/20240911/Homogeneous%20Space.png "After Perspective")
+![After Perspective](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Homogeneous%20Space.png?raw=true "After Perspective")
 
 Since all visible objects are transformed into this "NDC Cube", we can raymarch in NDC space and use pixels as the unit of ray step length, so every pixel on the ray path will be covered and a single ray will not sample a pixel multiple times. In order to fit in the texture and make sampling easier, we do the raymarch in "Texture space". "Texture space" is just a remap of the "NDC Cube". Issue 1 solved!
 
-![Texture Space](../images/20240911/Texture%20Space.png "Texture Space")
+![Texture Space](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Texture%20Space.png?raw=true "Texture Space")
 
 Now we can upgrade our method from "World Space Raymarching" to "Texture Space Raymarching". Here's the code.
 
@@ -231,13 +231,13 @@ Now we can upgrade our method from "World Space Raymarching" to "Texture Space R
 
 In code above we get the ray origin and endpoint in texture space and march from the origin to the end **one pixel every step**. "Texture Space Raymarching" can solve the "Over-sampling" issue said above.
 
-![@](../images/20240911/Texture%20Space%20SSR1.png)
+![@](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Texture%20Space%20SSR1.png?raw=true)
 
 Rendered in 4K resolution, 384 raymarching iterations. Notice that the reflected image length is not influenced by the distance between the shading point and the camera. That's especially good when you need distant reflections.
 
 Note that we are stepping in the "Texture Space" with a **same** step distance, but in world space the distance between testing points may change because of perspective projection.
 
-<img src="../images/20240911/Texture%20Space%20Not%20Linear.png" title="" alt="@" data-align="center">
+<img title="" src="https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Texture%20Space%20Not%20Linear.png?raw=true" alt="@" data-align="center">
 
 #### Hierarchical-Z Tracing
 
@@ -245,11 +245,11 @@ Now our "Texture Space Raymarching" method still has a big problem: performance.
 
 Hierarchical-Z buffer is a mipmap chain that contains from detailed to undetailed scene  depth data. The first mipmap level of it is just a copy of the camera depth buffer, each pixel in the second or above mipmap level takes the **minimum or maximum** depth value from 4 neighbouring pixels in previous mipmap level and store the value as its data. Figure below represents how this mipmap generation works:
 
-![@](../images/20240911/Hi-Z%20mipmap%20chain.png)
+![@](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Hi-Z%20mipmap%20chain.png?raw=true)
 
 Building such kind of hierarchical structure can help the raymarching algorithm effectively skip empty spaces in scene by using a larger step length and do depth comparisation in higher mipmap levels. In order not to produce a wrong intersection result, we construct the Hi-Z buffer by taking the most "near from the camera" depth value from 4 neighbouring pixels in previous mipmap level.
 
-<img title="" src="../images/20240911/Hi-Z%20Mipmap%20Chain1.png" alt="@" data-align="center" width="481">
+<img title="" src="https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Hi-Z%20Mipmap%20Chain1.png?raw=true" alt="@" data-align="center" width="481">
 
 The general idea of tracing with hierarchical-Z buffer is like the pseudo code below:
 
@@ -286,7 +286,7 @@ color=Get reflection of the result
 
 And the the ray will act like the image below:
 
-<img title="" src="../images/20240911/Hierarchical-Z%20Tracing.png" alt="@" data-align="center">
+<img title="" src="https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Hierarchical-Z%20Tracing.png?raw=true" alt="@" data-align="center">
 
 Note that in the pseudo I write "texure space", that's because the Hi-Z tracing will happen in "Texture Space" said in the paragraph Marching In The Texture Space. Hi-Z tracing is based on texture space raymarching method, that means it can solve both two major issues I listed.
 
@@ -300,21 +300,21 @@ Time to show the power of Hierarchical-Z Tracing, our new high-performance meth
 
 All screenshots are rendered in 4K resolution, 100 max iterations.
 
-![@](../images/20240911/Hi-Z%20Tracing.png)
+![@](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Hi-Z%20Tracing.png?raw=true)
 
 Hi-Z Tracing, 160-190 FPS, very far reflections
 
-![@](../images/20240911/Texture%20Space%20Raymarching.png)
+![@](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Texture%20Space%20Raymarching.png?raw=true)
 
 Texture Space Raymarching, 200-220FPS, near reflections
 
-![@](../images/20240911/World%20Space%20Raymarching.png)
+![@](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/World%20Space%20Raymarching.png?raw=true)
 
 World Space Raymarching, 160-180FPS, very near reflections
 
-![@](../images/20240911/Texture%20Space%20Raymarching1.png)
+![@](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Texture%20Space%20Raymarching1.png?raw=true)
 
-Texture Space Raymarching, 50-60FPS, far reflections
+Texture Space Raymarching,1024 iterations, 50-60FPS, far reflections
 
 As you can see, the Hi-Z Tracing method has the longest tracing distance with only 100 step iterations and has no noticeable artifacts. The Hi-Z Tracing method is truely a fantastic technique. It can also be used on effects related to screen space raymarching, such as Screen Space Contact Shadows, Screen Space Indirect Diffuse.
 
