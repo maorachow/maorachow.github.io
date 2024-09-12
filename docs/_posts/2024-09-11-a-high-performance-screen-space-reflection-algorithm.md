@@ -253,13 +253,14 @@ Building such kind of hierarchical structure can help the raymarching algorithm 
 
 The general idea of tracing with hierarchical-Z buffer is like the pseudo code below:
 
-```hlsl
+```
 int level=0
 
 point ray=texture space ray origin
 direction dir=texture space ray direction
 
 finalIntersectionPoint result
+
 while(iteration less than max allowed){
 
     gridCell currentCellOfRay=Get which grid cell in current level the ray point in
@@ -267,20 +268,23 @@ while(iteration less than max allowed){
     point testRayPoint=Intersect the texture space ray with the plane z=depthInCurrentCell
     gridCell CellOfTestRayPoint=Get which grid cell in current level the testRayPoint in
 
+
     if(CellOfTestRayPoint and currentCellOfRay is not the same cell){
-    ray=the intersection between the texture space ray and the grid border in current level
-    not intersected, ascend a level
+        ray=the intersection between the texture space ray and the grid border in current level
+        not intersected, ascend a level
     }
+
     if(CellOfTestRayPoint and currentCellOfRay is the same cell){
-    if(current level is stop level){
-    result=ray
-    break
-    }
-      ray= testRayPoint
-     intersected, decend a level
+        if(current level is stop level){
+            result=ray
+            break
+        }
+          ray= testRayPoint
+         intersected, decend a level
     }
 
 }
+
 color=Get reflection of the result
 ```
 
@@ -298,7 +302,7 @@ This blog is a clear and thorough explanation on what the Hi-Z tracing method wo
 
 Time to show the power of Hierarchical-Z Tracing, our new high-performance method of Screen Space Reflection.
 
-All screenshots are rendered in 4K resolution, 100 max iterations.
+The first, second and third screenshot is rendered in 4K resolution, 100 max iterations.
 
 ![@](https://github.com/maorachow/maorachow.github.io/blob/main/docs/images/20240911/Hi-Z%20Tracing.png?raw=true)
 
